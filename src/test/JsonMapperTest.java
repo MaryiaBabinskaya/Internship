@@ -12,7 +12,7 @@ class JsonMapperTest {
     @Test //in this test please write your own filePath, and it will read from it
     void verifyResourceFieldWithSingleAsteriskFile() throws IOException {
         JsonMapper jsonMapper = JsonMapper.defaultInstance();
-        String json = JsonFileReader.readJsonFromFile("C:\\Users\\User\\Desktop\\Internship\\src\\test\\Test.json");
+        String json = JsonFileReader.readJsonFromFile("C:\\Users\\User\\Desktop\\Java_MY\\Internship\\src\\test\\Test.json");
         assertFalse(jsonMapper.verifyResourceField(json));
     }
 
@@ -38,6 +38,24 @@ class JsonMapperTest {
     void verifyResourceFieldWithNullJson() {
         JsonMapper jsonMapper = JsonMapper.defaultInstance();
         assertFalse(jsonMapper.verifyResourceField(null));
+    }
+
+    @Test
+    void verifyResourceFieldWithSpecialCharacters() {
+        JsonMapper jsonMapper = JsonMapper.defaultInstance();
+        assertTrue(jsonMapper.verifyResourceField("{\"PolicyName\":\"root\",\"PolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"IamListAccess\",\"Effect\":\"Allow\",\"Action\":[\"iam:ListRoles\",\"iam:ListUsers\"],\"Resource\":\"special:characters/\\\"*\"}]}}"));
+    }
+
+    @Test
+    void verifyResourceFieldWithInvalidFormat() {
+        JsonMapper jsonMapper = JsonMapper.defaultInstance();
+        assertFalse(jsonMapper.verifyResourceField("{invalid json}"));
+    }
+
+    @Test
+    void verifyResourceFieldWithDifferentValueTypes() {
+        JsonMapper jsonMapper = JsonMapper.defaultInstance();
+        assertFalse(jsonMapper.verifyResourceField("{\"Resource\":12345}"));
     }
 
 }
